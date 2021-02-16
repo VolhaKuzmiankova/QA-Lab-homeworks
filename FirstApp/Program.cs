@@ -117,7 +117,24 @@ namespace FirstApp
             dynamic dyn = 13;
             dyn += 6;
             Console.WriteLine(dyn);
+            
+         int num13 = 175;
+         int num = num13 / 5;
+         if (num < 40)
+         {
+             Console.WriteLine(+num); // -35
+         }
+
+         bool check = true;
+         Console.WriteLine(!check);
+
+         short a = -113;
+         Console.WriteLine(++a);
+
+         ushort b = 10;
+         Console.WriteLine(b--);
 
         }
+        
     }
 }
