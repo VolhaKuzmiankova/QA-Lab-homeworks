@@ -4,7 +4,7 @@ using Collections.Utils;
 
 namespace Collections
 {
-    public class Task2
+    public static class Task2
     {
         public static void FindSumBetweenMaxAndMin()
         {
@@ -22,7 +22,6 @@ namespace Collections
             {
                 Console.Write(value + " ");
             }
-
             Console.WriteLine();
 
             int[] array = new int[queue.Count];

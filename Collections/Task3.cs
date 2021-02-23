@@ -4,7 +4,7 @@ using Collections.Utils;
 
 namespace Collections
 {
-    public class Task3
+    public static class Task3
     {
 
         public static void FindLastNumber()

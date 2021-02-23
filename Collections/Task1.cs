@@ -4,7 +4,7 @@ using Collections.Utils;
 
 namespace Collections
 {
-    class Task1
+    public static class Task1
     {
 
         public static void MergeStacks()
@@ -46,7 +46,7 @@ namespace Collections
             print(stack3);
         }
 
-        static void print(Stack<int> stack)
+        private static void print(Stack<int> stack)
         {
             foreach (var value in stack)
             {
