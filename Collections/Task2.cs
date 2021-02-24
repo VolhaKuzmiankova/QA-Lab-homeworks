@@ -10,52 +10,93 @@ namespace Collections
         {
             Console.WriteLine("===== Task 2 =====");
 
+            var countOfElements = RandomUtil.NexRandomInt(min: 3);
+            var queue = InitQueue(countOfElements);
+
+            PrintQueue(queue);
+
+            var array = ConvertQueueToArray(queue);
+
+            var maxIdx = FindMaxElementIndex(array);
+            var minIdx = FindMinElementIndex(array);
+
+            var startIdx = maxIdx > minIdx ? minIdx : maxIdx;
+            var endIdx = maxIdx > minIdx ? maxIdx : minIdx;
+
+            var sum = GetSumOfElementsBetweenIndices(array, startIdx, endIdx);
+
+            Console.WriteLine(
+                $"sum of numbers between max ({array[maxIdx]}) and min ({array[minIdx]}) values is {sum}");
+        }
+
+        private static Queue<int> InitQueue(int countOfElements)
+        {
             var queue = new Queue<int>();
-            var n = RandomUtil.NexRandomInt(min: 3);
-            for (var i = 0; i < n; i++)
+            for (var i = 0; i < countOfElements; i++)
             {
                 queue.Enqueue(RandomUtil.NexRandomInt());
             }
 
+            return queue;
+        }
+
+        private static void PrintQueue(Queue<int> queue)
+        {
             Console.Write("Queue: ");
             foreach (var value in queue)
             {
                 Console.Write(value + " ");
             }
-            Console.WriteLine();
 
+            Console.WriteLine();
+        }
+
+        private static int[] ConvertQueueToArray(Queue<int> queue)
+        {
             int[] array = new int[queue.Count];
             queue.CopyTo(array, 0);
-            var max = queue.Peek();
-            var maxIdx = 0;
-            var min = queue.Peek();
-            var minIdx = 0;
+            return array;
+        }
+
+        private static int FindMinElementIndex(int[] array)
+        {
+            var result = 0;
 
             for (var i = 0; i < array.Length; i++)
             {
-                if (array[i] > max)
+                if (array[i] < array[result])
                 {
-                    max = array[i];
-                    maxIdx = i;
-                }
-
-                if (array[i] < min)
-                {
-                    min = array[i];
-                    minIdx = i;
+                    result = i;
                 }
             }
 
-            var startIdx = maxIdx > minIdx ? minIdx : maxIdx;
-            var endIdx = maxIdx > minIdx ? maxIdx : minIdx;
+            return result;
+        }
 
+        private static int FindMaxElementIndex(int[] array)
+        {
+            var result = 0;
+
+            for (var i = 0; i < array.Length; i++)
+            {
+                if (array[i] > array[result])
+                {
+                    result = i;
+                }
+            }
+
+            return result;
+        }
+
+        private static int GetSumOfElementsBetweenIndices(int[] array, int startIdx, int endIdx)
+        {
             var sum = 0;
             for (var i = startIdx; i <= endIdx; i++)
             {
                 sum += array[i];
             }
 
-            Console.WriteLine($"sum of numbers between max and min values is {sum}");
+            return sum;
         }
     }
 }

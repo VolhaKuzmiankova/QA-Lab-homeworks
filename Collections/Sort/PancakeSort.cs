@@ -2,7 +2,7 @@
 {
     public static class PancakeSort
     {
-        public static int[] Sort(int[] array)
+        public static int[] GetSortedArray(int[] array)
         {
             for (var i = array.Length - 1; i >= 0; i--)
             {

@@ -2,7 +2,7 @@
 {
     public static class SelectionSort
     {
-        public static int[] Sort(int[] array, int currentIdx = 0)
+        public static int[] GetSortedArray(int[] array, int currentIdx = 0)
         {
             if (currentIdx == array.Length)
                 return array;
@@ -12,7 +12,7 @@
                 Swap(ref array[indexOfMin], ref array[currentIdx]);
             }
 
-            return Sort(array, currentIdx + 1);
+            return GetSortedArray(array, currentIdx + 1);
         }
 
         private static int GetIndexOfMinElement(int[] array, int startIndex)
