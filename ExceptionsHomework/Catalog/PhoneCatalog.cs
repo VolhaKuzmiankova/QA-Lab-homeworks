@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using ExceptionsHomework.Exceptions;
 using ExceptionsHomework.Models;
@@ -10,15 +9,11 @@ namespace ExceptionsHomework.Catalog
     public class PhoneCatalog
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        
-        private Dictionary<int, Shop> _shops;
-        private List<Phone> _phones;
 
-        public IEnumerable<Shop> GetShops()
-        {
-            return _shops.Values;
-        }
-        
+        private readonly Dictionary<int, Shop> _shops;
+        private readonly List<Phone> _allPhones;
+        private List<Phone> _filteredPhones;
+
         public PhoneCatalog(ShopList shopList)
         {
             _shops = new Dictionary<int, Shop>();
@@ -26,24 +21,27 @@ namespace ExceptionsHomework.Catalog
             {
                 _shops.Add(shop.Id, shop);
             }
-            _phones = new List<Phone>();
+
+            _allPhones = new List<Phone>();
             foreach (var shop in _shops.Values)
             {
-                _phones.AddRange(shop.Phones);
+                _allPhones.AddRange(shop.Phones);
             }
+
+            _filteredPhones = new List<Phone>(_allPhones);
         }
 
-        public List<Phone> FindPhone(string desiredModel)
+        public void FilterPhonesByModel(string desiredModel)
         {
-            var phones = new List<Phone>();
+            var appropriatedPhones = new List<Phone>();
             var isUnavailable = false;
-            foreach (var phone in _phones)
+            foreach (var phone in _allPhones)
             {
                 if (phone.Model == desiredModel)
                 {
                     if (phone.IsAvailable)
                     {
-                        phones.Add(phone);
+                        appropriatedPhones.Add(phone);
                     }
                     else
                     {
@@ -52,22 +50,24 @@ namespace ExceptionsHomework.Catalog
                 }
             }
 
-            if (phones.Count > 0)
+            if (appropriatedPhones.Count > 0)
             {
-                return phones;
-            } else if (isUnavailable)
+                _filteredPhones = new List<Phone>(appropriatedPhones);
+            }
+            else if (isUnavailable)
             {
-                throw new PhoneUnavailableException();
+                throw new PhoneUnavailableException(
+                    "Данный товар отсутствует на складе. Попробуйте выбрать другой товар.");
             }
             else
             {
-                throw new PhoneNotFoundException();
+                throw new PhoneNotFoundException("Введенный Вами товар не найден. Попробуйте выбрать другой товар.");
             }
         }
 
-        public Phone OrderPhone(List<Phone> phones, string shopName)
+        public Phone OrderPhone(string shopName)
         {
-            foreach (var phone in phones)
+            foreach (var phone in _filteredPhones)
             {
                 if (_shops[phone.ShopId].Name == shopName)
                 {
@@ -75,12 +75,38 @@ namespace ExceptionsHomework.Catalog
                 }
             }
 
-            throw new ShopNotFoundException();
+            throw new ShopNotFoundException(
+                "Введенного Вами магазина не существует. Попробуйте ввести название магазина заново.");
+        }
+
+        public int GetNumberOfAvailablePhones(Shop shop, OperationSystemType type)
+        {
+            var result = 0;
+            var phones = shop.Phones;
+            foreach (var phone in phones)
+            {
+                if (phone.OperationSystemType == type && phone.IsAvailable)
+                {
+                    result++;
+                }
+            }
+
+            return result;
+        }
+
+        public IEnumerable<Shop> GetShops()
+        {
+            return _shops.Values;
         }
 
         public Shop GetShopById(int id)
         {
             return _shops[id];
+        }
+
+        public List<Phone> getPhones()
+        {
+            return _filteredPhones;
         }
     }
 }
